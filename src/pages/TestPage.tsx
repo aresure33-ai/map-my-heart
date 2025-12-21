@@ -4,7 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useLoveTest } from '@/contexts/LoveTestContext';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { HeartIcon } from '@/components/HeartIcon';
-import { LoveMap } from '@/components/LoveMap';
+import { LazyLoveMap } from '@/components/LazyLoveMap';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -89,7 +89,7 @@ const TestPage: React.FC = () => {
             </h2>
             <p className="text-muted-foreground mb-6">{t('clickToPlace')}</p>
 
-            <LoveMap
+            <LazyLoveMap
               location1={data.location1}
               location2={data.location2}
               name1={data.name1}
