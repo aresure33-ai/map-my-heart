@@ -12,7 +12,17 @@ interface LoveMapProps {
   onLocation2Set: (location: Location) => void;
 }
 
+const escapeHtml = (str: string): string => {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+};
+
 const createHeartIcon = (color: string, label: string) => {
+  const safeLabel = escapeHtml(label);
   return L.divIcon({
     className: 'custom-marker',
     html: `
@@ -31,7 +41,7 @@ const createHeartIcon = (color: string, label: string) => {
           font-weight: 600;
           white-space: nowrap;
           box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        ">${label}</span>
+        ">${safeLabel}</span>
       </div>
     `,
     iconSize: [40, 60],
