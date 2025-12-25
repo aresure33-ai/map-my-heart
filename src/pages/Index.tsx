@@ -44,6 +44,9 @@ const Index: React.FC = () => {
 
         <div className="container mx-auto text-center relative z-10">
           <div className="animate-fade-up">
+            <p className="text-xl md:text-2xl font-semibold text-primary mb-4 animate-bounce">
+              {t('welcome')}
+            </p>
             <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-foreground">
               {t('heroTitle')}
             </h1>
