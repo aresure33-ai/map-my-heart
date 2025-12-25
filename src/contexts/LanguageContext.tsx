@@ -11,6 +11,10 @@ interface Translations {
 
 const translations: Translations = {
   // Landing page
+  welcome: {
+    en: "Welcome!",
+    ur: "خوش آمدید!"
+  },
   heroTitle: {
     en: "Discover Your Love Connection",
     ur: "اپنا محبت کا رشتہ دریافت کریں"
