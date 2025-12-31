@@ -75,8 +75,8 @@ export const LoveMap: React.FC<LoveMapProps> = ({
 
     const map = L.map(mapContainerRef.current).setView([30, 0], 2);
     
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '&copy; Esri, Maxar, Earthstar Geographics'
     }).addTo(map);
 
     map.on('click', (e) => {
