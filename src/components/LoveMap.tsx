@@ -75,8 +75,16 @@ export const LoveMap: React.FC<LoveMapProps> = ({
 
     const map = L.map(mapContainerRef.current).setView([30, 0], 2);
     
+    // Satellite base layer
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
       attribution: '&copy; Esri, Maxar, Earthstar Geographics'
+    }).addTo(map);
+
+    // Labels overlay for country/city names
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; CartoDB',
+      subdomains: 'abcd',
+      pane: 'overlayPane'
     }).addTo(map);
 
     map.on('click', (e) => {
