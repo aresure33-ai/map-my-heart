@@ -3,8 +3,9 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Location } from '@/contexts/LoveTestContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Map, Satellite } from 'lucide-react';
+import { Map, Satellite, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { LocationSearch } from './LocationSearch';
 
 interface LoveMapboxProps {
   location1: Location | null;
@@ -31,6 +32,7 @@ export const LoveMapbox: React.FC<LoveMapboxProps> = ({
   const [mapStyle, setMapStyle] = useState<'satellite' | 'streets'>('satellite');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [mapboxToken, setMapboxToken] = useState<string>('');
 
   // Keep refs updated
   useEffect(() => {
@@ -52,6 +54,7 @@ export const LoveMapbox: React.FC<LoveMapboxProps> = ({
           return;
         }
 
+        setMapboxToken(data.token);
         mapboxgl.accessToken = data.token;
 
         map.current = new mapboxgl.Map({
@@ -206,40 +209,88 @@ export const LoveMapbox: React.FC<LoveMapboxProps> = ({
     );
   }
 
+  // Handle search selection and fly to location
+  const handleSearchLocation = (location: Location, isFirst: boolean) => {
+    if (isFirst) {
+      onLocation1Set(location);
+    } else {
+      onLocation2Set(location);
+    }
+    
+    // Fly to location
+    if (map.current) {
+      map.current.flyTo({
+        center: [location.lng, location.lat],
+        zoom: 5,
+        duration: 2000
+      });
+    }
+  };
+
   return (
-    <div className="relative">
-      {/* Map Mode Toggle */}
-      <div className="absolute top-4 left-4 z-10 flex gap-2">
-        <Button
-          size="sm"
-          variant={mapStyle === 'satellite' ? 'default' : 'outline'}
-          onClick={() => setMapStyle('satellite')}
-          className="flex items-center gap-2"
-        >
-          <Satellite className="w-4 h-4" />
-          Satellite
-        </Button>
-        <Button
-          size="sm"
-          variant={mapStyle === 'streets' ? 'default' : 'outline'}
-          onClick={() => setMapStyle('streets')}
-          className="flex items-center gap-2"
-        >
-          <Map className="w-4 h-4" />
-          Streets
-        </Button>
+    <div className="space-y-4">
+      {/* Search Boxes */}
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+            <Heart className="w-4 h-4 text-primary" />
+            <span>Your Location</span>
+          </div>
+          <LocationSearch
+            placeholder="Search city or country..."
+            onLocationSelect={(loc) => handleSearchLocation(loc, true)}
+            mapboxToken={mapboxToken}
+            color="#e91e63"
+          />
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+            <Heart className="w-4 h-4 text-coral" />
+            <span>Partner's Location</span>
+          </div>
+          <LocationSearch
+            placeholder="Search city or country..."
+            onLocationSelect={(loc) => handleSearchLocation(loc, false)}
+            mapboxToken={mapboxToken}
+            color="#ff5722"
+          />
+        </div>
       </div>
 
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-muted rounded-lg z-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="relative">
+        {/* Map Mode Toggle */}
+        <div className="absolute top-4 left-4 z-10 flex gap-2">
+          <Button
+            size="sm"
+            variant={mapStyle === 'satellite' ? 'default' : 'outline'}
+            onClick={() => setMapStyle('satellite')}
+            className="flex items-center gap-2"
+          >
+            <Satellite className="w-4 h-4" />
+            Satellite
+          </Button>
+          <Button
+            size="sm"
+            variant={mapStyle === 'streets' ? 'default' : 'outline'}
+            onClick={() => setMapStyle('streets')}
+            className="flex items-center gap-2"
+          >
+            <Map className="w-4 h-4" />
+            Streets
+          </Button>
         </div>
-      )}
 
-      <div 
-        ref={mapContainer} 
-        className="w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden shadow-card border border-border"
-      />
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-muted rounded-lg z-20">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        )}
+
+        <div 
+          ref={mapContainer} 
+          className="w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden shadow-card border border-border"
+        />
+      </div>
     </div>
   );
 };
