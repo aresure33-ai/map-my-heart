@@ -153,10 +153,18 @@ export const LoveMapbox: React.FC<LoveMapboxProps> = ({
     map.current.setStyle(style);
   }, [mapStyle]);
 
+  // Sanitize text to prevent XSS
+  const sanitizeText = (text: string): string => {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  };
+
   // Create heart marker element
   const createHeartMarker = (color: string, label: string) => {
     const el = document.createElement('div');
     el.className = 'custom-heart-marker';
+    const sanitizedLabel = sanitizeText(label);
     el.innerHTML = `
       <div style="display: flex; flex-direction: column; align-items: center;">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="${color}" stroke="#fff" stroke-width="1.5">
@@ -172,7 +180,7 @@ export const LoveMapbox: React.FC<LoveMapboxProps> = ({
           white-space: nowrap;
           box-shadow: 0 2px 8px rgba(0,0,0,0.3);
           margin-top: -5px;
-        ">${label}</span>
+        ">${sanitizedLabel}</span>
       </div>
     `;
     return el;
