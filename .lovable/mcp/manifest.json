@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "sdk_version": "0.22.2",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "map-my-heart-mcp",
+      "version": "0.1.0",
+      "title": "Map My Heart MCP"
+    },
+    "tools": [
+      {
+        "name": "calculate_love_score",
+        "title": "Calculate love score",
+        "description": "Compute a deterministic love-compatibility score (0-99) for two names, optionally boosted by geographic closeness.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "name1": {
+              "type": "string",
+              "minLength": 1,
+              "description": "First person's name"
+            },
+            "name2": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Second person's name"
+            },
+            "location1": {
+              "description": "Optional latitude/longitude for the first person",
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number"
+                },
+                "lng": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lat",
+                "lng"
+              ]
+            },
+            "location2": {
+              "description": "Optional latitude/longitude for the second person",
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number"
+                },
+                "lng": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lat",
+                "lng"
+              ]
+            }
+          },
+          "required": [
+            "name1",
+            "name2"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "distance_between",
+        "title": "Distance between two locations",
+        "description": "Return the great-circle distance in kilometers and miles between two lat/lng points.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "location1": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number"
+                },
+                "lng": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lat",
+                "lng"
+              ]
+            },
+            "location2": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number"
+                },
+                "lng": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lat",
+                "lng"
+              ]
+            }
+          },
+          "required": [
+            "location1",
+            "location2"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
